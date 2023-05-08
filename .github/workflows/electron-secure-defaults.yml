@@ -27,14 +27,13 @@ jobs:
       continue-on-error: true
       run: npm audit
     - name: Bundle Repo
-      run: tar -caf electron-secure-defaults-repo-${{ github.sha }}.zip .
+      run: tar -caf electron-secure-defaults-repo-${{ github.sha }}.zip *
 
     # Version should be filled in via package.json
     - name: Package for Customer
       run: |
         npm run package
         tar -caf electron-secure-defaults-1.0.0.zip README.md -C package *.exe
-
 
     - name: Archive Customer Package
       uses: actions/upload-artifact@v3
@@ -48,9 +47,6 @@ jobs:
         name: electron-secure-defaults-1.0.0.zip
         path: electron-secure-defaults-1.0.0.zip
   
-  notify-slack:
-    runs-on: ubuntu-latest
-    steps:
     - name: Notify Status
       if: always()
       uses: slackapi/slack-github-action@v1.23.0
