@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - run: npm install && npm run build
-    - run: tar -zcvf electron-secure-defaults.tar.gz ./*
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    - name: npm install & build
+      run: npm install && npm run build
+    - name: Bundle Repo
+      run: tar -zcvf electron-secure-defaults.tar.gz ./*
+    - name: Archive Bundle
+      uses: actions/upload-artifact@v3
+      with:
+        name: electron-secure-defaults
+        path: electron-secure-defaults.tar.gz
