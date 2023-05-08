@@ -4,9 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  SOFT_FAIL_DEPS: true
-
 jobs:
   package-repo:
 
@@ -18,12 +15,12 @@ jobs:
 
     - name: npm install & build
       run: npm install && npm run build
-    - name: Bundle Repo
-      run: tar -zcvf electron-secure-defaults.tar.gz ./*
     
     - name: Scan for Vulnerabilities
-      continue-on-error: ${{ env.SOFT_FAIL_DEPS }}
+      continue-on-error: true
       run: npm audit
+    - name: Bundle Repo
+      run: tar -zcvf electron-secure-defaults.tar.gz ./*
     - name: Archive Bundle
       uses: actions/upload-artifact@v3
       with:
