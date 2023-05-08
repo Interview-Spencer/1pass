@@ -26,13 +26,13 @@ jobs:
       continue-on-error: true
       run: npm audit
     - name: Bundle Repo
-      run: tar -a -c -f electron-secure-defaults-repo-${{ github.sha }}.zip ./*
+      run: tar -caf electron-secure-defaults-repo-${{ github.sha }}.zip ./*
 
     # Version should be filled in via package.json
     - name: Package for Customer
       run: |
         npm run package
-        tar -a -c -f electron-secure-defaults-1.0.0.zip README.md -C package *.exe
+        tar -caf electron-secure-defaults-1.0.0.zip README.md -C package *.exe
 
     - name: Archive Bundle
       uses: actions/upload-artifact@v3
