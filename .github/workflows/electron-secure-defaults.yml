@@ -35,7 +35,7 @@ jobs:
         npm run package
         tar -caf electron-secure-defaults-1.0.0.zip README.md -C package *.exe
 
-    - name: Archive Customer Package
+    - name: Archive Repo Bundle
       uses: actions/upload-artifact@v3
       with:
         name: Repo Bundle
