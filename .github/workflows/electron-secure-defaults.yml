@@ -42,40 +42,44 @@ jobs:
         channel-id: "ci-notifications" 
         payload: |
           {
-            "type": "header",
-            "text": {
-              "type": "plain_text",
-              "text": "1pass ${{ job.status }}"
-            }
-          },
-          {
-            "type": "section",
-            "fields": [
+            "blocks": [
               {
-                "type": "mrkdwn",
-                "text": "*Commit:*\n${{ github.ref}}"
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "1pass ${{ job.status }}"
+                }
               },
               {
-                "type": "mrkdwn",
-                "text": "*Author:*\n${{ github.actor }}"
-              }
-            ]
-          },
-          {
-            "type": "section",
-            "fields": [
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit:*\n${{ github.ref}}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Author:*\n${{ github.actor }}"
+                  }
+                ]
+              },
               {
-                "type": "mrkdwn",
-                "text": "*Job:*\n ${{ github.action }}"
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Job:*\n ${{ github.action }}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<${{ github.server_url }}/${{ github.repository}}/actions/runs/${{ github.run_id }}|View Workflow>"
+                }
               }
             ]
-          },
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "<${{ github.server_url }}/${{ github.repository}}/actions/runs/${{ github.run_id }}|View Workflow>"
-            }
           }
 
       env:
