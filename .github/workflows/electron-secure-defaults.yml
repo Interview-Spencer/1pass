@@ -7,14 +7,13 @@ on:
 
 #TODO:
 #  Add Caching
-#  Add notification if vulns are found
-#  Add package job and archive it
-#  Add env vars to toggle things that need it
+#  Add toggle for hard fail for vulns
+#  Add notification if vulns are found, mark unstable?
 
 jobs:
-  bundle-repo:
-
-    runs-on: ubuntu-latest
+  build-and-package:
+    name: Build and Package
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Code
@@ -27,18 +26,23 @@ jobs:
       continue-on-error: true
       run: npm audit
     - name: Bundle Repo
-      run: tar -zcvf electron-secure-defaults-${{ github.sha }}.tar.gz ./*
+      run: tar -a -c -f electron-secure-defaults-repo-${{ github.sha }}.zip ./*
+
+    # Version should be filled in via package.json
+    - name: Package for Customer
+      run: |
+        npm run package
+        tar -a -c -f electron-secure-defaults-1.0.0.zip README.md -C package *.exe
+
     - name: Archive Bundle
       uses: actions/upload-artifact@v3
       with:
         name: electron-secure-defaults
         path: electron-secure-defaults-${{ github.sha }}.tar.gz
-    
-    - name: Prepare Customer Package
-      run: |
-        npm run package
-        ls package/
-
+  
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
     - name: Notify Status
       if: always()
       uses: slackapi/slack-github-action@v1.23.0
