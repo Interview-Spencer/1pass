@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+
     - name: npm install & build
       run: npm install && npm run build
     - name: Bundle Repo
@@ -21,3 +22,28 @@ jobs:
       with:
         name: electron-secure-defaults
         path: electron-secure-defaults.tar.gz
+    
+    - name: Notify Status
+      if: always()
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: "ci-noifications" 
+        payload: |
+          {
+            "text": "Package-Repo ${{ job.status }}",
+            "attachments": [
+              {
+                "pretext": "Status",
+                "color": "28a745",
+                "fields": [
+                  {
+                    "title": "Status",
+                    "value": "${{ job.status }}"
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
