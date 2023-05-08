@@ -4,6 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
+
+#TODO:
+#  Fix Notifications to add URL and be clearer
+#  Add Caching
+#  Add notification if vulns are found
+#  Add package job and archive it
+#  Add env vars to toggle things that need it
+
 jobs:
   package-repo:
 
@@ -34,20 +42,42 @@ jobs:
         channel-id: "ci-notifications" 
         payload: |
           {
-            "text": "Package-Repo ${{ job.status }}",
-            "attachments": [
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "1pass ${{ job.status }}"
+            }
+          },
+          {
+            "type": "section",
+            "fields": [
               {
-                "pretext": "Status",
-                "color": "28a745",
-                "fields": [
-                  {
-                    "title": "Status",
-                    "value": "${{ job.status }}"
-                  }
-                ]
+                "type": "mrkdwn",
+                "text": "*Commit:*\n${{ github.ref}}"
+              },
+              {
+                "type": "mrkdwn",
+                "text": "*Author:*\n${{ github.actor }}"
               }
             ]
+          },
+          {
+            "type": "section",
+            "fields": [
+              {
+                "type": "mrkdwn",
+                "text": "*Job:*\n ${{ github.action }}"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "<${{ github.server_url }}/${{ github.repository}}/actions/runs/${{ github.run_id }}|View Workflow>"
+            }
           }
+
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
